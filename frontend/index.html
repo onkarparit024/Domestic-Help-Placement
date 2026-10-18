@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Domestic Help Placement</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fc;
+      color: #26344a;
+    }
+    header {
+      background: #0866bd;
+      color: white;
+      padding: 18px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    header h2 { margin: 0; }
+    nav { display: flex; gap: 18px; flex-wrap: wrap; }
+    nav a { color: white; text-decoration: none; font-weight: bold; }
+    .hero {
+      text-align: center;
+      padding: 65px 20px;
+      background: white;
+    }
+    .hero h1 { font-size: 38px; color: #164a83; }
+    .hero p { color: #5b6675; line-height: 1.7; }
+    .button, button {
+      background: #0878df;
+      color: white;
+      border: 0;
+      padding: 12px 20px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 15px;
+      text-decoration: none;
+    }
+    button:hover, .button:hover { background: #075ca9; }
+    .section { padding: 40px 7%; }
+    .section h2 { text-align: center; }
+    .services {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 18px;
+    }
+    .service, .auth-card, .dashboard-card {
+      background: white;
+      padding: 22px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px #172b4d12;
+    }
+    .service { text-align: center; }
+    .service .emoji { font-size: 35px; }
+    .auth-area {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+      max-width: 850px;
+      margin: auto;
+    }
+    .auth-card h2 { color: #0866bd; }
+    .auth-card form { display: grid; gap: 13px; }
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+    .message {
+      margin-top: 12px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+    .dashboard {
+      max-width: 1000px;
+      margin: 35px auto;
+      padding: 20px;
+    }
+    .dashboard-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
+      margin-top: 22px;
+    }
+    footer {
+      background: #12345a;
+      color: white;
+      text-align: center;
+      padding: 25px;
+      margin-top: 30px;
+    }
+    [hidden] { display: none !important; }
+    @media (max-width: 600px) {
+      header { padding: 16px 5%; }
+      .hero h1 { font-size: 29px; }
+      .section { padding: 30px 5%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>Domestic Help</h2>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#services">Services</a>
+      <a href="#contact">Contact</a>
+      <a href="#register">Register</a>
+      <a href="#login">Login</a>
+    </nav>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <h1>Find Trusted Domestic Helpers</h1>
+      <p>Connect families with domestic workers for their household needs.</p>
+      <a class="button" href="#services">Explore Services</a>
+      <a class="button" href="#register">Create Account</a>
+    </section>
+
+    <section class="section" id="services">
+      <h2>Our Services</h2>
+      <div class="services">
+        <article class="service">
+          <div class="emoji">🧹</div>
+          <h3>House Cleaning</h3>
+          <p>Find help for everyday household cleaning.</p>
+        </article>
+        <article class="service">
+          <div class="emoji">🍳</div>
+          <h3>Cooking</h3>
+          <p>Find domestic workers for meal preparation.</p>
+        </article>
+        <article class="service">
+          <div class="emoji">👶</div>
+          <h3>Baby Care</h3>
+          <p>Explore helpers for childcare requirements.</p>
+        </article>
+        <article class="service">
+          <div class="emoji">🧓</div>
+          <h3>Elderly Care</h3>
+          <p>Find assistance for elderly family members.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="auth">
+      <h2>Get Started</h2>
+      <div class="auth-area">
+        <article class="auth-card" id="register">
+          <h2>Create Account</h2>
+          <form id="registerForm">
+            <input name="name" type="text" placeholder="Full Name"
+                   minlength="2" maxlength="100" required>
+            <input name="email" type="email" placeholder="Email Address"
+                   maxlength="150" required>
+            <input name="password" type="password"
+                   placeholder="Create Password" minlength="8"
+                   autocomplete="new-password" required>
+            <button type="submit">Register</button>
+          </form>
+          <p id="registerMessage" class="message" role="status"></p>
+        </article>
+
+        <article class="auth-card" id="login">
+          <h2>Welcome Back</h2>
+          <form id="loginForm">
+            <input name="email" type="email" placeholder="Email Address"
+                   autocomplete="username" required>
+            <input name="password" type="password" placeholder="Password"
+                   autocomplete="current-password" required>
+            <button type="submit">Login</button>
+          </form>
+          <p id="loginMessage" class="message" role="status"></p>
+        </article>
+      </div>
+    </section>
+
+    <section id="dashboard" class="dashboard" hidden>
+      <div class="dashboard-top">
+        <div>
+          <h1 id="welcomeTitle">Welcome!</h1>
+          <p>You have logged in successfully.</p>
+        </div>
+        <button id="logoutButton" type="button">Back to Home / Logout</button>
+      </div>
+      <div class="dashboard-grid">
+        <article class="dashboard-card">
+          <h3>Your Account</h3>
+          <p id="userName"></p>
+          <p id="userEmail"></p>
+          <p id="userRole"></p>
+        </article>
+        <article class="dashboard-card">
+          <h3>House Cleaning</h3>
+          <p>Domestic cleaning assistance.</p>
+        </article>
+        <article class="dashboard-card">
+          <h3>Cooking</h3>
+          <p>Help with daily meal preparation.</p>
+        </article>
+        <article class="dashboard-card">
+          <h3>Care Services</h3>
+          <p>Baby care and elderly care information.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact">
+    <h3>Domestic Help Placement System</h3>
+    <p>Connecting Families with Domestic Workers</p>
+    <p>Contact: Add your official contact details here.</p>
+  </footer>
+
+  <script>
+    const API_URL = "http://localhost:5000/api";
+
+    const registerForm = document.getElementById("registerForm");
+    const loginForm = document.getElementById("loginForm");
+    const registerMessage = document.getElementById("registerMessage");
+    const loginMessage = document.getElementById("loginMessage");
+    const dashboard = document.getElementById("dashboard");
+    const authSection = document.getElementById("auth");
+
+    function showMessage(element, message, isError = false) {
+      element.textContent = message;
+      element.style.color = isError ? "#b42318" : "#167044";
+    }
+
+    async function sendRequest(endpoint, body) {
+      const response = await fetch(`${API_URL}/${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error("Server returned an invalid response.");
+      }
+
+      if (!response.ok) {
+        throw new Error(data.message || "Request failed. Please try again.");
+      }
+
+      return data;
+    }
+
+    registerForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      showMessage(registerMessage, "Registering...");
+
+      const name = registerForm.elements.name.value.trim();
+      const email = registerForm.elements.email.value.trim();
+      const password = registerForm.elements.password.value;
+
+      try {
+        const data = await sendRequest("register", {
+          name, email, password
+        });
+
+        showMessage(
+          registerMessage,
+          data.message || "Registration successful! You can now log in."
+        );
+        registerForm.reset();
+      } catch (error) {
+        showMessage(registerMessage, error.message, true);
+      }
+    });
+
+    loginForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      showMessage(loginMessage, "Logging in...");
+
+      const email = loginForm.elements.email.value.trim();
+      const password = loginForm.elements.password.value;
+
+      try {
+        const data = await sendRequest("login", { email, password });
+
+        if (!data.user || !data.user.name || !data.user.email) {
+          throw new Error("Login response is missing user information.");
+        }
+
+        document.getElementById("welcomeTitle").textContent =
+          `Welcome, ${data.user.name}!`;
+        document.getElementById("userName").textContent =
+          `Name: ${data.user.name}`;
+        document.getElementById("userEmail").textContent =
+          `Email: ${data.user.email}`;
+        document.getElementById("userRole").textContent =
+          `Role: ${data.user.role || "client"}`;
+
+        authSection.hidden = true;
+        dashboard.hidden = false;
+        showMessage(loginMessage, "");
+        dashboard.scrollIntoView({ behavior: "smooth" });
+      } catch (error) {
+        showMessage(loginMessage, error.message, true);
+      }
+    });
+
+    document.getElementById("logoutButton").addEventListener("click", function () {
+      dashboard.hidden = true;
+      authSection.hidden = false;
+      loginForm.reset();
+      showMessage(loginMessage, "");
+      window.location.hash = "home";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+  <section id="workers-section" style="padding:40px 20px;background:#f4f7fb;">
+  <h2 style="text-align:center;color:#173b70;">Our Available Helpers</h2>
+  <p id="workers-message" style="text-align:center;">Loading helpers...</p>
+  <div id="workers-list"
+       style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;max-width:1000px;margin:25px auto;">
+  </div>
+</section>
+
+<script>
+async function loadWorkers() {
+  const message = document.getElementById('workers-message');
+  const list = document.getElementById('workers-list');
+
+  try {
+    const response = await fetch('http://localhost:5000/api/workers');
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error('Could not load helpers');
+    }
+
+    list.replaceChildren();
+
+    if (!data.workers || data.workers.length === 0) {
+      message.textContent = 'No helpers available right now.';
+      return;
+    }
+
+    message.textContent = data.count + ' helpers found';
+
+    data.workers.forEach(worker => {
+      const card = document.createElement('div');
+      card.style.cssText =
+        'background:white;padding:22px;border-radius:12px;' +
+        'box-shadow:0 3px 12px #0001;';
+
+      const name = document.createElement('h3');
+      name.textContent = worker.full_name;
+      name.style.color = '#173b70';
+
+      const details = document.createElement('p');
+      details.textContent =
+        'Experience: ' + worker.experience_years + ' years';
+
+      const address = document.createElement('p');
+      address.textContent = 'Location: ' + worker.address;
+
+      const status = document.createElement('p');
+      status.textContent = 'Status: ' + worker.status;
+
+      card.append(name, details, address, status);
+      list.appendChild(card);
+    });
+  } catch (error) {
+    message.textContent =
+      'Could not load helpers. Please check that the backend is running.';
+  }
+}
+
+loadWorkers();
+</script>
+<section id="contact" style="padding:40px 20px;background:#eef4ff;">
+  <h2 style="text-align:center;">Contact / Request a Helper</h2>
+
+  <form id="contact-form"
+        style="max-width:500px;margin:20px auto;display:grid;gap:12px;">
+    <input name="name" placeholder="Your Full Name" required
+           style="padding:12px;" />
+    <input name="phone" placeholder="Mobile Number" required
+           pattern="[0-9]{10}" title="Enter 10 digit mobile number"
+           style="padding:12px;" />
+    <input name="address" placeholder="Your Address" required
+           style="padding:12px;" />
+    <textarea name="requirement" placeholder="What help do you need? (Cleaning, Cooking, etc.)"
+              required style="padding:12px;"></textarea>
+    <button type="submit" style="padding:12px;background:#174ea6;color:white;border:0;border-radius:6px;">
+      Submit Request
+    </button>
+    <p id="contact-message"></p>
+  </form>
+</section>
+
+<script>
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  document.getElementById('contact-message').textContent =
+    'Thank you! Your form is ready. Database submission will be connected next.';
+});
+</script>
+</body>
+</html>
