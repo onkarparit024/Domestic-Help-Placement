@@ -123,6 +123,51 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
+ // Submit helper request
+app.post('/api/requests', async (req, res) => {
+  try {
+    const { name, phone, address, requirement } = req.body;
+
+    if (!name || !phone || !address || !requirement) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please fill all required fields'
+      });
+    }
+
+    const cleanName = String(name).trim();
+    const cleanPhone = String(phone).trim();
+    const cleanAddress = String(address).trim();
+    const cleanRequirement = String(requirement).trim();
+
+    if (!/^[0-9]{10}$/.test(cleanPhone)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Enter a valid 10-digit mobile number'
+      });
+    }
+
+    await pool.execute(
+      `INSERT INTO clients
+       (full_name, phone, address, requirement)
+       VALUES (?, ?, ?, ?)`,
+      [cleanName, cleanPhone, cleanAddress, cleanRequirement]
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'Your helper request has been submitted successfully!'
+    });
+  } catch (error) {
+    console.error('Request API error:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Could not submit request. Please try again.'
+    });
+  }
+});
+
+
 // Login user
 app.post('/api/login', async (req, res) => {
   try {
@@ -197,6 +242,75 @@ async function startServer() {
     console.log('MySQL connected successfully!');
     connection.release();
 
+    
+/* ===== PLACEMENT / BOOKING API ===== */
+
+// Get all placements
+app.get('/api/placements', async (req, res) => {
+  try {
+    const [rows] = await pool.execute(
+      'SELECT * FROM placements ORDER BY id DESC'
+    );
+
+    res.json({
+      success: true,
+      placements: rows
+    });
+  } catch (error) {
+    console.error('Get placements error:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Could not fetch placements'
+    });
+  }
+});
+
+// Create a placement
+app.post('/api/placements', async (req, res) => {
+  try {
+    const { client_id, worker_id, service_date, notes } = req.body;
+
+    if (!client_id || !worker_id || !service_date) {
+      return res.status(400).json({
+        success: false,
+        message: 'Client ID, Worker ID and Service Date are required'
+      });
+    }
+
+    const clientId = Number(client_id);
+    const workerId = Number(worker_id);
+
+    if (
+      !Number.isInteger(clientId) || clientId <= 0 ||
+      !Number.isInteger(workerId) || workerId <= 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid client or worker ID'
+      });
+    }
+
+    const [result] = await pool.execute(
+      `INSERT INTO placements
+       (client_id, worker_id, service_date, status, notes)
+       VALUES (?, ?, ?, 'pending', ?)`,
+      [clientId, workerId, service_date, notes || null]
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'Placement created successfully!',
+      placementId: result.insertId
+    });
+  } catch (error) {
+    console.error('Create placement error:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Could not create placement. Check client, worker and date.'
+    });
+  }
+});
+
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`);
     });
@@ -205,5 +319,57 @@ async function startServer() {
     process.exit(1);
   }
 }
+
+/* Contact / Helper Request API */
+app.post('/api/request', async (req, res) => {
+  try {
+    const { name, phone, address, requirement } = req.body;
+
+    if (!name || !phone || !address || !requirement) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name, phone, address and requirement are required'
+      });
+    }
+
+    const cleanName = String(name).trim();
+    const cleanPhone = String(phone).trim();
+    const cleanAddress = String(address).trim();
+    const cleanRequirement = String(requirement).trim();
+
+    if (
+      !cleanName ||
+      !/^[0-9]{10,15}$/.test(cleanPhone.replace(/[\s+-]/g, '')) ||
+      !cleanAddress ||
+      !cleanRequirement
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please enter valid request details'
+      });
+    }
+
+    const [result] = await pool.execute(
+      `INSERT INTO clients
+       (full_name, phone, address, requirement)
+       VALUES (?, ?, ?, ?)`,
+      [cleanName, cleanPhone, cleanAddress, cleanRequirement]
+    );
+
+    return res.status(201).json({
+      success: true,
+      message: 'Request submitted successfully',
+      clientId: result.insertId
+    });
+
+  } catch (error) {
+    console.error('Request API error:', error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: 'Could not submit request'
+    });
+  }
+});
 
 startServer();

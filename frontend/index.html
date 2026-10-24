@@ -409,12 +409,102 @@ loadWorkers();
     <p id="contact-message"></p>
   </form>
 </section>
+<script>
+document.getElementById('contact-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form = this;
+    const message = document.getElementById('contact-message');
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    message.textContent = 'Submitting request...';
+
+    try {
+        const response = await fetch('http://localhost:5000/api/request', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Request failed');
+        }
+
+        message.textContent = 'Request submitted successfully!';
+        form.reset();
+
+    } catch (error) {
+        message.textContent = 'Error: ' + error.message +
+            '. Please check whether the backend server is running.';
+    }
+});
+</script>
+
+<section id="booking" style="padding: 30px; max-width: 600px; margin: auto;">
+  <h2>Book a Helper</h2>
+
+  <form id="booking-form">
+    <label for="booking-client">Client ID</label>
+    <input id="booking-client" type="number" min="1" required
+           placeholder="Enter your Client ID"
+           style="display:block;width:100%;padding:10px;margin:8px 0 16px;">
+
+    <label for="booking-worker">Worker ID</label>
+    <input id="booking-worker" type="number" min="1" required
+           placeholder="Enter Worker ID"
+           style="display:block;width:100%;padding:10px;margin:8px 0 16px;">
+
+    <label for="booking-date">Service Date</label>
+    <input id="booking-date" type="date" required
+           style="display:block;width:100%;padding:10px;margin:8px 0 16px;">
+
+    <label for="booking-notes">Notes (optional)</label>
+    <textarea id="booking-notes"
+              placeholder="Enter any additional requirements"
+              style="display:block;width:100%;padding:10px;margin:8px 0 16px;"></textarea>
+
+    <button type="submit" style="padding:12px 20px;cursor:pointer;">
+      Book Helper
+    </button>
+    <p id="booking-message" role="status"></p>
+  </form>
+</section>
 
 <script>
-document.getElementById('contact-form').addEventListener('submit', function(e) {
+document.getElementById('booking-form').addEventListener('submit', async function(e) {
   e.preventDefault();
-  document.getElementById('contact-message').textContent =
-    'Thank you! Your form is ready. Database submission will be connected next.';
+
+  const message = document.getElementById('booking-message');
+  message.textContent = 'Submitting booking...';
+
+  const payload = {
+    client_id: document.getElementById('booking-client').value,
+    worker_id: document.getElementById('booking-worker').value,
+    service_date: document.getElementById('booking-date').value,
+    notes: document.getElementById('booking-notes').value
+  };
+
+  try {
+    const response = await fetch('http://localhost:5000/api/placements', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    message.textContent = data.message ||
+      (response.ok ? 'Booking created successfully!' : 'Booking failed.');
+
+    if (response.ok) {
+      document.getElementById('booking-form').reset();
+    }
+  } catch (error) {
+    message.textContent = 'Could not connect to the server. Check whether backend is running.';
+  }
 });
 </script>
 </body>
